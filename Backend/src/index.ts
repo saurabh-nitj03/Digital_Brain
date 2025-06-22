@@ -27,7 +27,7 @@ app.use(cookieParser());
 app.use(
   cors({
     // origin: "*",
-     origin: "https://digital-brain-y6ag.onrender.com",
+     origin: "https://digitalbrain-l3f7.onrender.com",
     credentials: true,
   })
 );
