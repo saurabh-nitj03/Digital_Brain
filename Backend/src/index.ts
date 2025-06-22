@@ -29,6 +29,7 @@ app.use(
     // origin: "*",
      origin: "https://digitalbrain-l3f7.onrender.com",
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
   })
 );
 
