@@ -91,7 +91,7 @@ const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             httpOnly: true,
             secure: true,
             maxAge: 24 * 60 * 60 * 1000,
-            sameSite: "None"
+            sameSite: 'none'
         });
         return res.status(200).json({
             success: true,

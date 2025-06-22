@@ -79,7 +79,7 @@ export const signin=async(req:any,res:any)=>{
             httpOnly: true,
             secure: true,
             maxAge: 24 * 60 * 60 * 1000 ,
-            sameSite: "None"
+            sameSite: 'none'
         });
         return res.status(200).json({
                 success:true,
