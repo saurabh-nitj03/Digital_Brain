@@ -13,7 +13,7 @@ const port = process.env.PORT || 8000;
 exports.port = port;
 const ContentType = ['youtube', 'twitter', 'document', 'image', 'link'];
 exports.ContentType = ContentType;
-// console.log(port);
+console.log(port);
 const random = (len) => {
     let options = "ndkjnmcnisjdkvisjakpaajwoew";
     let ans = "";
