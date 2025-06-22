@@ -32,7 +32,7 @@ export function Sidebar({ contents, setContents }: SidebarProps) {
     { icon: <Link />, type: "Link" },
   ];
   const signout = async () => {
-      const response = await axios.post(`${BACKEND_URL}/api/v1/signout`, {}, { withCredentials: true })
+       await axios.post(`${BACKEND_URL}/api/v1/signout`, {}, { withCredentials: true })
       // console.log(response)
       navigate("/");
     }
