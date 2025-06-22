@@ -113,6 +113,7 @@ const signout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             httpOnly: true,
             secure: true,
             expires: new Date(0),
+            sameSite: "None"
         });
         return res.status(200).json({
             success: true,
