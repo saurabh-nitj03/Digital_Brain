@@ -35,13 +35,13 @@ export const createContent=async (req: any, res: any) => {
             }
 
             let existingTags = await Tags.find({ title: { $in: tags } });
-            let existingTagsTitle = existingTags.map((item) => item.title);
+            let existingTagsTitle = existingTags.map((item:any) => item.title);
 
-            let newTagsTitle = tags.filter((tag) => !existingTagsTitle.includes(tag));
+            let newTagsTitle = tags.filter((tag:any) => !existingTagsTitle.includes(tag));
 
             if (newTagsTitle.length > 0) {
-                const newTags = await Tags.insertMany(newTagsTitle.map((tag) => ({ title: tag })));
-                allTags = [...existingTagsTitle, ...newTags.map((tag) => tag.title)];
+                const newTags = await Tags.insertMany(newTagsTitle.map((tag:any) => ({ title: tag })));
+                allTags = [...existingTagsTitle, ...newTags.map((tag:any) => tag.title)];
             } else {
                 allTags = existingTagsTitle;
             }
