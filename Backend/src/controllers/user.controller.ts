@@ -79,6 +79,7 @@ export const signin=async(req:any,res:any)=>{
             httpOnly: true,
             secure: true,
             expires: "1d",
+            sameSite: "None"
         });
         return res.status(200).json({
                 success:true,
