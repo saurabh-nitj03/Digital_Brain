@@ -12,7 +12,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/cookie-parser": "^1.4.9",
     "@types/dotenv": "^8.2.3",
     "@types/mongoose": "^5.11.97",
     "axios": "^1.10.0",
@@ -30,6 +29,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.9",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
