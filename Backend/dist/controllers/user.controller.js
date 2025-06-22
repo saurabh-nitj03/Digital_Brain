@@ -87,10 +87,10 @@ const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const token = jsonwebtoken_1.default.sign({ id: user._id }, constant_1.JWT_PASSWORD, {
             expiresIn: "1d"
         });
-        res.cookie("jwt", token, user._id, {
+        res.cookie("jwt", token, {
             httpOnly: true,
             secure: true,
-            expires: "1d",
+            maxAge: 24 * 60 * 60 * 1000,
             sameSite: "None"
         });
         return res.status(200).json({
@@ -113,7 +113,6 @@ const signout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             httpOnly: true,
             secure: true,
             expires: new Date(0),
-            sameSite: "None"
         });
         return res.status(200).json({
             success: true,

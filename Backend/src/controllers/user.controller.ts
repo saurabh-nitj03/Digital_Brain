@@ -75,10 +75,10 @@ export const signin=async(req:any,res:any)=>{
         const token=jwt.sign({id:user._id},JWT_PASSWORD,{
                 expiresIn:"1d"
             })
-        res.cookie("jwt", token, user._id, {
+        res.cookie("jwt", token, {
             httpOnly: true,
             secure: true,
-            expires: "1d",
+            maxAge: 24 * 60 * 60 * 1000 ,
             sameSite: "None"
         });
         return res.status(200).json({
