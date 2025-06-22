@@ -9,7 +9,7 @@ dotenv_1.default.config();
 const JWT_PASSWORD = process.env.JWT_PASSWORD;
 exports.JWT_PASSWORD = JWT_PASSWORD;
 // console.log(JWT_PASSWORD)
-const port = process.env.PORT;
+const port = process.env.PORT || 8000;
 exports.port = port;
 const ContentType = ['youtube', 'twitter', 'document', 'image', 'link'];
 exports.ContentType = ContentType;
