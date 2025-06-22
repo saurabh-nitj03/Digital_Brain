@@ -92,7 +92,7 @@ const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             secure: true,
             maxAge: 24 * 60 * 60 * 1000,
             sameSite: 'none',
-            domain: 'digital-brain-backend-xpfc.onrender.com'
+            domain: 'digitalbrain-l3f7.onrender.com'
         });
         return res.status(200).json({
             success: true,

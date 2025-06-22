@@ -5,6 +5,7 @@ import { JWT_PASSWORD } from "../utils/constant";
 
 export const userMiddleware = (req: any, res: any, next: any) => {
   let token = req.headers["authorization"];
+  console.log(req.cookie);
   if (!token) {
     token = req.cookies?.jwt;
     // console.log(token);
