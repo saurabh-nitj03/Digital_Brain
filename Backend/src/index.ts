@@ -26,7 +26,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "*",
+    // origin: "*",
+     origin: "https://digital-brain-cgo2.onrender.com",
     credentials: true,
   })
 );
