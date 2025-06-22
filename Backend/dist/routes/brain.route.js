@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const middleware_1 = require("../middleware/middleware");
+const brain_controller_1 = require("../controllers/brain.controller");
+const router = (0, express_1.Router)();
+router.route("/share").post(middleware_1.userMiddleware, brain_controller_1.createLink);
+router.route("/shared-brain").get(brain_controller_1.getAllSharedLink);
+router.route("/hash/:shareLink").get(brain_controller_1.getLink);
+router.route("/getuser/:username").get(brain_controller_1.getUser);
+exports.default = router;
