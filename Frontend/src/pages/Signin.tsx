@@ -30,15 +30,15 @@ export default function Signin() {
     const onSubmit: SubmitHandler<TSignSchema> = async (data) => {
         setLoading(true)
         try {
-            const response = await axios.post(BACKEND_URL + "/api/v1/signin", data, {
-                withCredentials: true,
-            })
-            if (!response.data.success) {
-                setError(response.data.message || "SignIn Failed");
-            } else {
+            // const response = await axios.post(BACKEND_URL + "/api/v1/signin", data, {
+            //     withCredentials: true,
+            // })
+            // if (!response.data.success) {
+            //     setError(response.data.message || "SignIn Failed");
+            // } else {
                 setLoading(false);
                 navigate("/dashboard");
-            }
+            // }
         } catch (err) {
             setLoading(false)
             if (axios.isAxiosError(err)) {
