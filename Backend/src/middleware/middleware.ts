@@ -7,7 +7,7 @@ export const userMiddleware = (req: any, res: any, next: any) => {
   let token: string | undefined;
 
   // 1. Try to extract token from Authorization header
-  const authHeader = req.headers["authorization"];
+  const authHeader = req.headers["Authorization"];
 if (authHeader && authHeader.startsWith("Bearer ")) {
   token = authHeader.split(" ")[1];
 }

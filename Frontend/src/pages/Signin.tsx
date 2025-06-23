@@ -37,8 +37,15 @@ export default function Signin() {
                 setError(response.data.message || "SignIn Failed");
             } else {
                 // Save token to localStorage
+                console.log("Login response:", response.data); // Debug log
                 if (response.data.token) {
                     localStorage.setItem('token', response.data.token);
+                    console.log("Token saved:", response.data.token); // Debug log
+                } else if (response.data.accessToken) {
+                    localStorage.setItem('token', response.data.accessToken);
+                    console.log("Access token saved:", response.data.accessToken); // Debug log
+                } else {
+                    console.log("No token found in response"); // Debug log
                 }
                 setLoading(false);
                 navigate("/dashboard");

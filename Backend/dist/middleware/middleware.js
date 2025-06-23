@@ -10,7 +10,7 @@ const userMiddleware = (req, res, next) => {
     var _a;
     let token;
     // 1. Try to extract token from Authorization header
-    const authHeader = req.headers["authorization"];
+    const authHeader = req.headers["Authorization"];
     if (authHeader && authHeader.startsWith("Bearer ")) {
         token = authHeader.split(" ")[1];
     }

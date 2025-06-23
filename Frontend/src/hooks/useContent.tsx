@@ -8,9 +8,11 @@ export default function useContent() {
     const [contents, setContents] = useState<Content[]>([]);
     function refresh() {
         // setContents([]);
+        const token = getToken();
+        console.log("Sending request with token:", token); // Debug log
         axios.get(`${BACKEND_URL}/api/v1/content`, {
             headers: {
-                'Authorization': `Bearer ${getToken()}`
+                'Authorization': `Bearer ${token}`
             },
             withCredentials: true
         }).then((response) => {
