@@ -17,13 +17,13 @@ dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
-app.set("trust proxy", true);
 app.use((0, cors_1.default)({
     // origin: "*",
     origin: "https://digitalbrain-l3f7.onrender.com",
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
+app.set("trust proxy", 1);
 app.listen(constant_1.port);
 app.get('/', (req, res) => {
     res.send('Hello World');
