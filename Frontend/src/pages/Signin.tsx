@@ -31,7 +31,10 @@ export default function Signin() {
         setLoading(true)
         try {
             const response = await axios.post(BACKEND_URL + "/api/v1/signin", data, {
-                withCredentials: true
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
             })
             if (!response.data.success) {
                 setError(response.data.message || "SignIn Failed");

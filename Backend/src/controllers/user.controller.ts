@@ -77,13 +77,13 @@ export const signin=async(req:any,res:any)=>{
             })
        res.cookie("jwt", token, {
             httpOnly: true,
+            secure: true,
+            sameSite: "None",
             maxAge: 24 * 60 * 60 * 1000,
             // secure: true,
             // sameSite: 'none',
             // domain:'.digitalbrain-l3f7.onrender.com',
-            sameSite: "none",
-            secure: true,
-             path: "/"
+            //  path: "/"
             
         });
         return res.status(200).json({
