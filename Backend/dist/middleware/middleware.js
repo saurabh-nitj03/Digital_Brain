@@ -9,6 +9,9 @@ const constant_1 = require("../utils/constant");
 const userMiddleware = (req, res, next) => {
     var _a;
     let token = req.headers["authorization"];
+    console.log('Headers:', req.headers);
+    console.log('Cookies:', req.cookies);
+    console.log('Raw cookie header:', req.get('Cookie'));
     console.log(req.cookie);
     if (!token) {
         token = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.jwt;
