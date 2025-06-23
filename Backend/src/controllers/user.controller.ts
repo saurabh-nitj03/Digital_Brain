@@ -80,7 +80,7 @@ export const signin=async(req:any,res:any)=>{
             secure: true,
             maxAge: 24 * 60 * 60 * 1000,
             sameSite: 'None',
-            // domain:'.digitalbrain-l3f7.onrender.com'
+            domain:'.digitalbrain-l3f7.onrender.com'
         });
         return res.status(200).json({
                 success:true,
