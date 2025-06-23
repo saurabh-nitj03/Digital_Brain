@@ -1,6 +1,5 @@
 import { Button } from "../components/Button"
 import { Input } from "../components/CreateContentModal"
-import { BACKEND_URL } from "../config";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
