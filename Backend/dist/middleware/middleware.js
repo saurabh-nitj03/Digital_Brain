@@ -8,7 +8,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const constant_1 = require("../utils/constant");
 const userMiddleware = (req, res, next) => {
     var _a;
-    let token = req.headers["authorization"];
+    let token = req.headers["Authorization"];
     if (token && token.startsWith("Bearer ")) {
         token = token.slice(7);
     }

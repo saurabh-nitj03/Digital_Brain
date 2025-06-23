@@ -4,7 +4,7 @@ import { JWT_PASSWORD } from "../utils/constant";
 
 
 export const userMiddleware = (req: any, res: any, next: any) => {
-  let token = req.headers["authorization"];
+  let token = req.headers["Authorization"];
 if (token && token.startsWith("Bearer ")) {
   token = token.slice(7); 
 }
