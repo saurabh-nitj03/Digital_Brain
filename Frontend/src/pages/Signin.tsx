@@ -1,5 +1,6 @@
 import { Button } from "../components/Button"
 import { Input } from "../components/CreateContentModal"
+import { BACKEND_URL } from "../config";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
@@ -29,15 +30,19 @@ export default function Signin() {
     const onSubmit: SubmitHandler<TSignSchema> = async (data) => {
         setLoading(true)
         try {
-            // const response = await axios.post(BACKEND_URL + "/api/v1/signin", data, {
-            //     withCredentials: true,
-            // })
-            // if (!response.data.success) {
-            //     setError(response.data.message || "SignIn Failed");
-            // } else {
+            const response = await axios.post(BACKEND_URL + "/api/v1/signin", data, {
+                withCredentials: true,
+            })
+            if (!response.data.success) {
+                setError(response.data.message || "SignIn Failed");
+            } else {
+                // Save token to localStorage
+                if (response.data.token) {
+                    localStorage.setItem('token', response.data.token);
+                }
                 setLoading(false);
                 navigate("/dashboard");
-            // }
+            }
         } catch (err) {
             setLoading(false)
             if (axios.isAxiosError(err)) {

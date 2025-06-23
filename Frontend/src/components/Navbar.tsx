@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import Logo from "../icons/Logo";
 import { Button } from "./Button";
@@ -9,6 +8,11 @@ import { CrossIcon } from "../icons/CrossIcon"; // or any other icon lib you use
 export default function Navbar() {
     const navigate = useNavigate();
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+    const navigateHomeAndLogout = () => {
+        localStorage.removeItem('token');
+        navigate("/");
+    };
 
     return (
         <div className="border-b-2 border-slate-200 px-4 py-5 md:px-6 flex justify-between items-center">
@@ -29,6 +33,7 @@ export default function Navbar() {
                 </div>
                 <Button variant="secondary" size="md" text="Login" onClick={() => navigate("/signin")} />
                 <Button variant="primary" size="md" text="Sign Up" onClick={() => navigate("/signup")} />
+                <Button variant="primary" size="md" text="Log out" onClick={navigateHomeAndLogout} />
             </div>
 
             {/* Mobile Menu Button */}
@@ -50,6 +55,7 @@ export default function Navbar() {
                     </div>
                     <Button variant="secondary" size="md" text="Login" onClick={() => { navigate("/signin"); setMobileMenuOpen(false); }} />
                     <Button variant="primary" size="md" text="Sign Up" onClick={() => { navigate("/signup"); setMobileMenuOpen(false); }} />
+                    <Button variant="primary" size="md" text="Log out" onClick={() => { navigateHomeAndLogout(); setMobileMenuOpen(false); }} />
                 </div>
             )}
         </div>

@@ -11,6 +11,7 @@ import { BACKEND_URL } from '../config'
 import { useNavigate } from 'react-router-dom'
 import ShareBrainModal from "../components/ShareBrainModal"
 import SearchBar from '../components/SearchBar'
+import { getToken } from '../utils/auth'
 
 export default function Dashboard() {
     const navigate = useNavigate()
@@ -23,8 +24,11 @@ export default function Dashboard() {
         const checkAuthentication = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(`${BACKEND_URL}/api/v1/check`, { 
-                    withCredentials: true 
+                const response = await axios.get(`${BACKEND_URL}/api/v1/check`, {
+                    headers: {
+                        'Authorization': `Bearer ${getToken()}`
+                    },
+                    withCredentials: true
                 });
                 
                 if (response.data.success) {

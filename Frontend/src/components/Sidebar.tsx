@@ -1,8 +1,8 @@
-
 import type { ReactElement } from "react";
 import { useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../config";
 import axios from "axios";
+import { getToken } from '../utils/auth';
 
 import Twitter from "../icons/Twitter";
 import YouTube from "../icons/Youtube";
@@ -33,6 +33,8 @@ export function Sidebar({ contents, setContents }: SidebarProps) {
   ];
   const signout = async () => {
        await axios.post(`${BACKEND_URL}/api/v1/signout`, {}, { withCredentials: true })
+      // Remove token from localStorage
+      localStorage.removeItem('token');
       // console.log(response)
       navigate("/");
     }
@@ -75,10 +77,14 @@ export function Sidebar({ contents, setContents }: SidebarProps) {
             <button
               key={item.type}
               onClick={async () => {
-                const response = await axios.get(`${BACKEND_URL}/api/v1/content/${item.type.toLowerCase()}`, { withCredentials: true });
+                const response = await axios.get(`${BACKEND_URL}/api/v1/content/${item.type.toLowerCase()}`, {
+                  headers: {
+                    'Authorization': `Bearer ${getToken()}`
+                  },
+                  withCredentials: true
+                });
                 console.log(response)
                 setContents(response.data.content);
-  
               }}
             >
               {item.icon}

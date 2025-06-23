@@ -87,7 +87,7 @@ const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const token = jsonwebtoken_1.default.sign({ id: user._id }, constant_1.JWT_PASSWORD, {
             expiresIn: "1d"
         });
-        res.cookie("jwt", token, {
+        res.cookie("jwt", token, user._id, {
             httpOnly: true,
             secure: true,
             sameSite: "None",

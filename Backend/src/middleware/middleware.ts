@@ -5,10 +5,9 @@ import { JWT_PASSWORD } from "../utils/constant";
 
 export const userMiddleware = (req: any, res: any, next: any) => {
   let token = req.headers["authorization"];
-  console.log('Headers:', req.headers);
-console.log('Cookies:', req.cookies);
-console.log('Raw cookie header:', req.get('Cookie'));
-  console.log(req.cookie);
+if (token && token.startsWith("Bearer ")) {
+  token = token.slice(7); 
+}
   if (!token) {
     token = req.cookies?.jwt;
     // console.log(token);

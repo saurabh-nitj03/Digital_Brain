@@ -8,6 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "../components/Button";
 import SearchBar from "../components/SearchBar";
 import type { Content } from "../interface/Content";
+import { getToken } from '../utils/auth';
 
 
 export default function SharedBrain() {
@@ -15,7 +16,13 @@ export default function SharedBrain() {
     const [contents, setContents] = useState<Content[]>([]);
     const hash = useParams<{ hash: string }>().hash;
     useEffect(() => {
-        axios.get(`${BACKEND_URL}/api/v1/brain/hash/${hash}`,).then((response) => {
+        axios.get(`${BACKEND_URL}/api/v1/brain/hash/${hash}`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${getToken()}`
+                }
+            }
+        ).then((response) => {
             setContents(response.data.content);
         }).catch((error) => {
             console.error("Error fetching content:", error);
