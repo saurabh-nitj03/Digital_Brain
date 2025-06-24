@@ -6,6 +6,7 @@ import { BACKEND_URL } from "../config";
 
 import { ClipboardIcon, ClipboardCheckIcon, } from "lucide-react";
 import { CrossIcon } from "../icons/CrossIcon";
+import { getToken } from "../utils/auth";
 
 interface ShareBrainModalProps {
   open: boolean;
@@ -22,7 +23,9 @@ const ShareBrainModal = ({ open, onClose }: ShareBrainModalProps) => {
       const response = await axios.post(
         `${BACKEND_URL}/api/v1/brain/share`,
         { share: true },
-        { withCredentials: true }
+        {headers: {
+              'Authorization': `${getToken()}`
+            }, withCredentials: true }
       );
       if (response.data.success) {
         setIsShared(true);

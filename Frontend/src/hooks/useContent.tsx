@@ -11,9 +11,9 @@ export default function useContent() {
         const token = getToken();
         console.log("Sending request with token:", token); // Debug log
         axios.get(`${BACKEND_URL}/api/v1/content`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            },
+                headers: {
+                    'Authorization': `${getToken()}`
+                },
             withCredentials: true
         }).then((response) => {
             setContents(response.data.content);

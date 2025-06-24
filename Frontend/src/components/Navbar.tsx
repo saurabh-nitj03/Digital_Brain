@@ -33,7 +33,7 @@ export default function Navbar() {
                 </div>
                 <Button variant="secondary" size="md" text="Login" onClick={() => navigate("/signin")} />
                 <Button variant="primary" size="md" text="Sign Up" onClick={() => navigate("/signup")} />
-                <Button variant="primary" size="md" text="Log out" onClick={navigateHomeAndLogout} />
+                {/* <Button variant="primary" size="md" text="Log out" onClick={navigateHomeAndLogout} /> */}
             </div>
 
             {/* Mobile Menu Button */}
@@ -55,7 +55,7 @@ export default function Navbar() {
                     </div>
                     <Button variant="secondary" size="md" text="Login" onClick={() => { navigate("/signin"); setMobileMenuOpen(false); }} />
                     <Button variant="primary" size="md" text="Sign Up" onClick={() => { navigate("/signup"); setMobileMenuOpen(false); }} />
-                    <Button variant="primary" size="md" text="Log out" onClick={() => { navigateHomeAndLogout(); setMobileMenuOpen(false); }} />
+                    {/* <Button variant="primary" size="md" text="Log out" onClick={() => { navigateHomeAndLogout(); setMobileMenuOpen(false); }} /> */}
                 </div>
             )}
         </div>

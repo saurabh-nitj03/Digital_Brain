@@ -12,23 +12,32 @@ import { getToken } from '../utils/auth';
 
 
 export default function SharedBrain() {
+     const [loading, setLoading] = useState(true);
+    // Show loading spinner while checking authentication
     const navigate = useNavigate();
     const [contents, setContents] = useState<Content[]>([]);
     const hash = useParams<{ hash: string }>().hash;
     useEffect(() => {
-        axios.get(`${BACKEND_URL}/api/v1/brain/hash/${hash}`,
-            {
-                headers: {
-                    'Authorization': `Bearer ${getToken()}`
-                }
-            }
+        setLoading(true)
+        axios.get(`${BACKEND_URL}/api/v1/brain/hash/${hash}`
         ).then((response) => {
             setContents(response.data.content);
+            setLoading(false)
         }).catch((error) => {
             console.error("Error fetching content:", error);
         });
     }, []);
-
+    
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-purple-50">
+                <div className="flex flex-col items-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+                    <p className="mt-4 text-gray-600">Fetching Brains...</p>
+                </div>
+            </div>
+        );
+    }
     return (
         <>
             <Navbar />

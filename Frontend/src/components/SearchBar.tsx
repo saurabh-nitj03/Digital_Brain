@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../config";
 import axios from "axios";
 import type { Content } from "../interface/Content";
+import { getToken } from "../utils/auth";
 
 interface SearchBarProps {
     contents: Content[],
@@ -19,7 +20,10 @@ export default function SearchBar({ setContents, userId, hash }: SearchBarProps)
                 if (hash) {
                     if (query.trim() === "") {
                         // console.log(hash,userId)
-                        const all = await axios.get(`${BACKEND_URL}/api/v1/brain/hash/${hash}`, { withCredentials: true },)
+                        const all = await axios.get(`${BACKEND_URL}/api/v1/brain/hash/${hash}`, { 
+                            headers: {
+                        'Authorization': `${getToken()}`
+                    },withCredentials: true },)
                         // console.log(all);
                         setContents(all.data.content)
                         return;
@@ -43,7 +47,10 @@ export default function SearchBar({ setContents, userId, hash }: SearchBarProps)
                         return;
                     }
                     let id;
-                    const res = await axios.get(`${BACKEND_URL}/api/v1/check`, { withCredentials: true });
+                    const res = await axios.get(`${BACKEND_URL}/api/v1/check`, {
+                        headers: {
+                        'Authorization': `${getToken()}`
+                        }, withCredentials: true });
                     if (res.data.success) id = res.data.userId;
                     const result = await axios.post(`${BACKEND_URL}/api/v1/content/search`, {
                         userId: id,

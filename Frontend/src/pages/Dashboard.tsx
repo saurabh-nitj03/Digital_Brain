@@ -17,7 +17,8 @@ export default function Dashboard() {
     const navigate = useNavigate()
     const [modalOpen, setModalOpen] = useState(false);
     const { contents, refresh, setContents } = useContent();
-    const [loading, setLoading] = useState(true); // Start with true
+    const [loading, setLoading] = useState(true);
+    const [contentLoading,setContentLoading] =useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [openShareModal, setOpenShareModal] = useState(false);
     useEffect(() => {
@@ -33,7 +34,9 @@ export default function Dashboard() {
                 
                 if (response.data.success) {
                     setIsAuthenticated(true);
+                    setContentLoading(true);
                     refresh(); // Load content only after authentication is confirmed
+                    setContentLoading(false);
                 } else {
                     navigate("/signin");
                 }
@@ -44,20 +47,32 @@ export default function Dashboard() {
                 setLoading(false);
             }
         };
-
+        
         checkAuthentication();
     }, [modalOpen]); // Remove modalOpen dependency - only run on mount
-
+    
+   
     // Show loading spinner while checking authentication
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-gray-100">
+            <div className="flex items-center justify-center min-h-screen bg-purple-50">
                 <div className="flex flex-col items-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
                     <p className="mt-4 text-gray-600">Verifying authentication...</p>
                 </div>
             </div>
         );
+    }
+    if(contentLoading){
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-purple-50">
+                <div className="flex flex-col items-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                    <p className="mt-4 text-gray-600">Loading Contents...</p>
+                </div>
+            </div>
+        );
+
     }
 
     // Don't render the main UI if not authenticated

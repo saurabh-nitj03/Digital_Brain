@@ -32,7 +32,11 @@ export function Sidebar({ contents, setContents }: SidebarProps) {
     { icon: <Link />, type: "Link" },
   ];
   const signout = async () => {
-       await axios.post(`${BACKEND_URL}/api/v1/signout`, {}, { withCredentials: true })
+       await axios.post(`${BACKEND_URL}/api/v1/signout`, {}, { 
+        headers: {
+                        'Authorization': `${getToken()}`
+                    },
+        withCredentials: true })
       // Remove token from localStorage
       localStorage.removeItem('token');
       // console.log(response)
@@ -79,8 +83,8 @@ export function Sidebar({ contents, setContents }: SidebarProps) {
               onClick={async () => {
                 const response = await axios.get(`${BACKEND_URL}/api/v1/content/${item.type.toLowerCase()}`, {
                   headers: {
-                    'Authorization': `Bearer ${getToken()}`
-                  },
+                        'Authorization': `${getToken()}`
+                    },
                   withCredentials: true
                 });
                 console.log(response)

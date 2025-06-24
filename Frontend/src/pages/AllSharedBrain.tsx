@@ -14,17 +14,32 @@ import type{ SharedLink } from '../interface/SharedLink';
 export default function SecondBrainShare() {
   const [sharedLinks, setSharedLinks] = useState<SharedLink[]>([]);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    axios.get(`${BACKEND_URL}/api/v1/brain/shared-brain`)
+   const [loading, setLoading] = useState(true);
+    // Show loading spinner while checking authentication
+    
+    useEffect(() => {
+      setLoading(true);
+      axios.get(`${BACKEND_URL}/api/v1/brain/shared-brain`)
       .then((response) => {
+        setLoading(false)
         setSharedLinks(response.data.data);
       })
       .catch((error) => {
+        setLoading(false)
         console.error("Error fetching shared content:", error);
       });
-  }, []);
-  return (
+    }, []);
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-purple-50">
+                <div className="flex flex-col items-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                    <p className="mt-4 text-gray-600">Fetching Brains...</p>
+                </div>
+            </div>
+        );
+    }
+    return (
     <>
       <Navbar />
       
