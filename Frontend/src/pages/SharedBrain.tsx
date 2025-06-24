@@ -8,7 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "../components/Button";
 import SearchBar from "../components/SearchBar";
 import type { Content } from "../interface/Content";
-import { getToken } from '../utils/auth';
+// import { getToken } from '../utils/auth';
 
 
 export default function SharedBrain() {

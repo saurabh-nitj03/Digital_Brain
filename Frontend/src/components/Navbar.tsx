@@ -9,11 +9,6 @@ export default function Navbar() {
     const navigate = useNavigate();
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    const navigateHomeAndLogout = () => {
-        localStorage.removeItem('token');
-        navigate("/");
-    };
-
     return (
         <div className="border-b-2 border-slate-200 px-4 py-5 md:px-6 flex justify-between items-center">
             {/* Logo Section */}
