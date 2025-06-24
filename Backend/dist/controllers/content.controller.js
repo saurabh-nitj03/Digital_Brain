@@ -98,7 +98,7 @@ const createContent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         return res.status(500).json({
             success: false,
             message: "Internal server error",
-            error: process.env.NODE_ENV === 'development' ? err : undefined
+            error: err
         });
     }
 });

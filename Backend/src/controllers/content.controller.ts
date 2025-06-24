@@ -99,7 +99,7 @@ export const createContent=async (req: any, res: any) => {
         return res.status(500).json({
             success: false,
             message: "Internal server error",
-            error: process.env.NODE_ENV === 'development' ? err : undefined
+            error: err
         });
     }
 }
