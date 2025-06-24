@@ -26,7 +26,7 @@ export default function Dashboard() {
                 setLoading(true);
                 const response = await axios.get(`${BACKEND_URL}/api/v1/check`, {
                     headers: {
-                        'Authorization': `Bearer ${getToken()}`
+                        'Authorization': `${getToken()}`
                     },
                     withCredentials: true
                 });

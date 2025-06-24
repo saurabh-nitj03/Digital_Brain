@@ -7,13 +7,13 @@ exports.userMiddleware = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const constant_1 = require("../utils/constant");
 const userMiddleware = (req, res, next) => {
+    // let token: string | undefined;
     var _a;
-    let token;
     // 1. Try to extract token from Authorization header
-    const authHeader = req.headers["Authorization"];
-    if (authHeader && authHeader.startsWith("Bearer ")) {
-        token = authHeader.split(" ")[1];
-    }
+    let token = req.headers["Authorization"];
+    // if (authHeader && authHeader.startsWith("Bearer ")) {
+    //   token = authHeader.split(" ")[1];
+    // }
     if (!token) {
         token = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.jwt;
         // console.log(token);
