@@ -9,6 +9,7 @@ import { z } from "zod";
 import type { SubmitHandler } from "react-hook-form"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { getToken } from "../utils/auth"
 
 interface ModalProps {
     open: boolean,
@@ -77,7 +78,9 @@ const CreateContentModal = (props: ModalProps) => {
                 withCredentials: true,
                 headers: {
                     'Content-Type': 'multipart/form-data',
+                    'Authorization':`${getToken()}`
                 }
+                
             });
 
 

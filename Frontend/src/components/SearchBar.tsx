@@ -42,7 +42,11 @@ export default function SearchBar({ setContents, userId, hash }: SearchBarProps)
                 } else {
                     // console.log("i am here in main part")
                     if (query.trim() === "") {
-                        const all = await axios.get(`${BACKEND_URL}/api/v1/content`, { withCredentials: true },)
+                        const all = await axios.get(`${BACKEND_URL}/api/v1/content`, { withCredentials: true,
+                            headers:{
+                                'Authorization':`${getToken()}`
+                            }
+                         },)
                         setContents(all.data.content)
                         return;
                     }

@@ -23,9 +23,11 @@ const ShareBrainModal = ({ open, onClose }: ShareBrainModalProps) => {
       const response = await axios.post(
         `${BACKEND_URL}/api/v1/brain/share`,
         { share: true },
-        {headers: {
-              'Authorization': `${getToken()}`
-            }, withCredentials: true }
+        {
+          headers: {
+            'Authorization': `${getToken()}`
+          }, withCredentials: true
+        }
       );
       if (response.data.success) {
         setIsShared(true);
@@ -69,7 +71,7 @@ const ShareBrainModal = ({ open, onClose }: ShareBrainModalProps) => {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Share Your Brain</h2>
           <button onClick={onClose}>
-            <CrossIcon  />
+            <CrossIcon />
           </button>
         </div>
 
@@ -96,7 +98,7 @@ const ShareBrainModal = ({ open, onClose }: ShareBrainModalProps) => {
                   variant="primary"
                   size="md"
                   onClick={copyToClipboard}
-                  
+
                 />
               </div>
               <Button
@@ -105,7 +107,7 @@ const ShareBrainModal = ({ open, onClose }: ShareBrainModalProps) => {
                 text="Stop Sharing"
                 onClick={handleUnshare}
                 width={true}
-                
+
               />
             </>
           ) : (
