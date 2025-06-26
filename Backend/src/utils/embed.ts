@@ -36,5 +36,3 @@ export async function embedQuery(query: string): Promise<number[]> {
   return output as number[];
 }
 
-// Commented out the old local model code below for reference
-// ... existing code ...

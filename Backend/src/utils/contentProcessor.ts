@@ -13,7 +13,6 @@ export interface ProcessedContent {
 
 export class ContentProcessor {
   
-  // Process PDF files
   static async processPDF(buffer: Buffer): Promise<ProcessedContent> {
     try {
       const data = await pdf(buffer);
@@ -27,7 +26,6 @@ export class ContentProcessor {
     }
   }
 
-  // Process images using OCR
   static async processImage(buffer: Buffer): Promise<ProcessedContent> {
     try {
       const result = await Tesseract.recognize(buffer, 'eng', {
@@ -44,17 +42,13 @@ export class ContentProcessor {
     }
   }
 
-  // Process web links
   static async processWebLink(url: string): Promise<ProcessedContent> {
     try {
       const response = await axios.get(url);
       const $ = cheerio.load(response.data);
-      
-      // Remove script and style elements
       $('script').remove();
       $('style').remove();
       
-      // Extract text from body
       const text = $('body').text().replace(/\s+/g, ' ').trim();
       
       return {
@@ -67,7 +61,6 @@ export class ContentProcessor {
     }
   }
 
-  // Process YouTube links
   static async processYouTubeLink(url: string): Promise<ProcessedContent> {
     try {
       // Extract video ID from URL
@@ -89,7 +82,6 @@ export class ContentProcessor {
     }
   }
 
-  // Process Twitter links
   static async processTwitterLink(url: string): Promise<ProcessedContent> {
     try {
       const browser = await puppeteer.launch({ headless: true });
@@ -114,7 +106,6 @@ export class ContentProcessor {
     }
   }
 
-  // Process plain text
   static async processText(text: string): Promise<ProcessedContent> {
     return {
       text: text,
@@ -123,7 +114,6 @@ export class ContentProcessor {
     };
   }
 
-  // Main processing function that determines content type and processes accordingly
   static async processContent(content: string | Buffer, contentType?: string): Promise<ProcessedContent> {
     try {
       // If content is a buffer, it's likely a file
@@ -137,7 +127,6 @@ export class ContentProcessor {
         }
       }
 
-      // If content is a string, check if it's a URL
       if (typeof content === 'string') {
         const url = content.trim();
         
@@ -158,7 +147,6 @@ export class ContentProcessor {
     }
   }
 
-  // Helper methods to detect URL types
   private static isYouTubeUrl(url: string): boolean {
     return url.includes('youtube.com') || url.includes('youtu.be');
   }

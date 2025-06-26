@@ -23,7 +23,7 @@ const app=express();
 import Chunk from "./model/chunks";
 import chunkText from "./utils/chunkText";
 // import { generateEmbeddings } from "./utils/embed";
-import { storeChunks } from "./utils/mongo";
+import { storeChunks } from "./utils/pinecone";
 
 app.use(express.json());
 app.use(cookieParser());

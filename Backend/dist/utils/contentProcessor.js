@@ -53,7 +53,6 @@ const tesseract_js_1 = __importDefault(require("tesseract.js"));
 const youtube_transcript_1 = require("youtube-transcript");
 const puppeteer_1 = __importDefault(require("puppeteer"));
 class ContentProcessor {
-    // Process PDF files
     static processPDF(buffer) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -69,7 +68,6 @@ class ContentProcessor {
             }
         });
     }
-    // Process images using OCR
     static processImage(buffer) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -87,16 +85,13 @@ class ContentProcessor {
             }
         });
     }
-    // Process web links
     static processWebLink(url) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const response = yield axios_1.default.get(url);
                 const $ = cheerio.load(response.data);
-                // Remove script and style elements
                 $('script').remove();
                 $('style').remove();
-                // Extract text from body
                 const text = $('body').text().replace(/\s+/g, ' ').trim();
                 return {
                     text: text,
@@ -109,7 +104,6 @@ class ContentProcessor {
             }
         });
     }
-    // Process YouTube links
     static processYouTubeLink(url) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -131,7 +125,6 @@ class ContentProcessor {
             }
         });
     }
-    // Process Twitter links
     static processTwitterLink(url) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -153,7 +146,6 @@ class ContentProcessor {
             }
         });
     }
-    // Process plain text
     static processText(text) {
         return __awaiter(this, void 0, void 0, function* () {
             return {
@@ -163,7 +155,6 @@ class ContentProcessor {
             };
         });
     }
-    // Main processing function that determines content type and processes accordingly
     static processContent(content, contentType) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -179,7 +170,6 @@ class ContentProcessor {
                         throw new Error('Unsupported file type');
                     }
                 }
-                // If content is a string, check if it's a URL
                 if (typeof content === 'string') {
                     const url = content.trim();
                     if (this.isYouTubeUrl(url)) {
@@ -202,7 +192,6 @@ class ContentProcessor {
             }
         });
     }
-    // Helper methods to detect URL types
     static isYouTubeUrl(url) {
         return url.includes('youtube.com') || url.includes('youtu.be');
     }

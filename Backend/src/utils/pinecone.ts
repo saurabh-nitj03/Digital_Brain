@@ -1,6 +1,5 @@
 import { Pinecone } from '@pinecone-database/pinecone';
 import { v4 as uuidv4 } from 'uuid';
-// import { EmbeddingResult } from "./embed";
 
 interface ChunkData {
   chunk: string;
@@ -10,13 +9,11 @@ interface ChunkData {
   metadata?: any;
 }
 
-// Pinecone client setup
 const pinecone = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY!,
 });
 const index = pinecone.Index(process.env.PINECONE_INDEX!);
 
-// Store (upsert) chunks as vectors in Pinecone
 async function storeChunks(userId: string, embedChunks: ChunkData[]) {
   try {
     const vectors = embedChunks.map((item) => ({
@@ -39,7 +36,6 @@ async function storeChunks(userId: string, embedChunks: ChunkData[]) {
   }
 }
 
-// Search for similar vectors in Pinecone
 async function searchChunks(userId: string, questionEmbedding: number[], topk: number = 10) {
   try {
     const result = await index.query({
@@ -48,7 +44,6 @@ async function searchChunks(userId: string, questionEmbedding: number[], topk: n
       filter: { userId },
       includeMetadata: true,
     });
-    // Map Pinecone results to expected format
     const matches = result.matches?.map((match: any) => ({
       chunktext: match.metadata.chunktext,
       source: match.metadata.source,
@@ -64,16 +59,12 @@ async function searchChunks(userId: string, questionEmbedding: number[], topk: n
   }
 }
 
-// Pinecone does not support listing all vectors for a user directly
 async function getUserChunks(userId: string) {
-  // Not directly supported; would require maintaining a separate metadata DB or using Pinecone's metadata filtering with a scan (not recommended for large datasets)
   console.warn('getUserChunks is not implemented for Pinecone.');
   return [];
 }
 
-// Delete all vectors for a user in Pinecone
 async function deleteUserChunks(userId: string) {
-  // Pinecone does not support batch delete by metadata; you must track IDs or use a metadata scan (not recommended for large datasets)
   console.warn('deleteUserChunks is not implemented for Pinecone.');
   return { deletedCount: 0 };
 }

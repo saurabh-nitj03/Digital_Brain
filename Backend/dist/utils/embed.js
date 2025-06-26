@@ -40,5 +40,3 @@ function embedQuery(query) {
         return output;
     });
 }
-// Commented out the old local model code below for reference
-// ... existing code ...
