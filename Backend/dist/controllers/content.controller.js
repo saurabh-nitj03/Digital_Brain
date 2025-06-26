@@ -12,11 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.contentType = exports.contentSearch = exports.deleteContent = exports.getContent = exports.createContent = void 0;
+exports.queryContent = exports.contentType = exports.contentSearch = exports.deleteContent = exports.getContent = exports.createContent = void 0;
 const content_1 = __importDefault(require("../model/content"));
 const tags_1 = require("../model/tags");
 const content_schema_1 = require("../schema/content.schema");
 const cloudinary_1 = require("../utils/cloudinary");
+const aiAgent_1 = require("../utils/aiAgent");
+const fs_1 = __importDefault(require("fs"));
+// Initialize AI Agent
+const aiAgent = new aiAgent_1.AIAgent();
 const createContent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let processedBody = Object.assign({}, req.body);
@@ -51,6 +55,26 @@ const createContent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 allTags = existingTagsTitle;
             }
         }
+        // Process content for AI agent BEFORE uploading to Cloudinary
+        let aiProcessingResult = null;
+        if (req.file) {
+            try {
+                // Process file for AI agent before uploading to Cloudinary
+                const fileBuffer = fs_1.default.readFileSync(req.file.path);
+                aiProcessingResult = yield aiAgent.processAndStoreContent(req.userId, fileBuffer, req.file.mimetype);
+                if (aiProcessingResult.success) {
+                    console.log("File processed for AI agent:", aiProcessingResult.message);
+                }
+                else {
+                    console.warn("AI agent processing failed:", aiProcessingResult.message);
+                }
+            }
+            catch (aiError) {
+                console.error("AI agent processing error:", aiError);
+                // Continue with content creation even if AI processing fails
+            }
+        }
+        // Now upload to Cloudinary (original flow)
         if (req.file) {
             const localFilePath = req.file.path;
             const uploadFile = yield (0, cloudinary_1.uploadCloudinary)(localFilePath);
@@ -61,6 +85,38 @@ const createContent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 });
             }
             link = uploadFile.url;
+        }
+        // Process other content types for AI agent
+        if (!req.file) {
+            try {
+                let contentToProcess;
+                let contentType;
+                if (link && (type === "youtube" || type === "twitter" || type === "link")) {
+                    // For URLs, process the link
+                    contentToProcess = link;
+                }
+                else if (content) {
+                    // For text content
+                    contentToProcess = content;
+                }
+                else {
+                    // Skip processing if no processable content
+                    console.log("No processable content found for AI agent");
+                }
+                // Process and store embeddings if we have content to process
+                if (contentToProcess) {
+                    aiProcessingResult = yield aiAgent.processAndStoreContent(req.userId, contentToProcess, contentType);
+                    if (aiProcessingResult.success) {
+                        console.log("Content processed for AI agent:", aiProcessingResult.message);
+                    }
+                    else {
+                        console.warn("AI agent processing failed:", aiProcessingResult.message);
+                    }
+                }
+            }
+            catch (aiError) {
+                console.error("AI agent processing error:", aiError);
+            }
         }
         if ((type === "youtube" || type === "twitter" || type === "link") && !link) {
             return res.status(400).json({
@@ -91,7 +147,11 @@ const createContent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         return res.status(201).json({
             success: true,
             message: "Content added successfully",
-            data: newContent
+            data: newContent,
+            aiProcessing: aiProcessingResult ? {
+                success: aiProcessingResult.success,
+                message: aiProcessingResult.message
+            } : null
         });
     }
     catch (err) {
@@ -236,3 +296,62 @@ const contentType = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.contentType = contentType;
+const queryContent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { question } = req.body;
+        const userId = req.userId;
+        if (!question || typeof question !== "string") {
+            return res.status(400).json({
+                success: false,
+                message: "Question is required"
+            });
+        }
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "User not authenticated"
+            });
+        }
+        const response = yield aiAgent.queryAgent(userId, question);
+        return res.status(200).json({
+            success: true,
+            answer: response.answer,
+            sources: response.sources,
+            confidence: response.confidence
+        });
+    }
+    catch (error) {
+        console.error('Error in queryContent:', error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+});
+exports.queryContent = queryContent;
+// export const getContentSummary = async(req: any, res: any) => {
+//     try {
+//         const userId = req.userId;
+//         if (!userId) {
+//             return res.status(401).json({
+//                 success: false,
+//                 message: "User not authenticated"
+//             });
+//         }
+//         const summary = await aiAgent.getUserContentSummary(userId);
+//         return res.status(200).json({
+//             success: true,
+//             summary
+//         });
+//     } catch (error) {
+//         console.error('Error in getContentSummary:', error);
+//         return res.status(500).json({
+//             success: false,
+//             message: "Internal server error"
+//         });
+//     }
+// }
+// {
+//    "userId":"6859764bb85d17bc5d8a847f",
+//    "question":"Who created this file ? What is the minor project"
+// }

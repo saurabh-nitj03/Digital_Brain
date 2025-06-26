@@ -10,6 +10,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const user_routes_1 = __importDefault(require("./routes/user.routes"));
 const content_route_1 = __importDefault(require("./routes/content.route"));
 const brain_route_1 = __importDefault(require("./routes/brain.route"));
+// import chatRoutes from "./routes/chat.routes"
 const constant_1 = require("./utils/constant");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
@@ -19,15 +20,28 @@ app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
     // origin: "*",
-    origin: "https://digitalbrain-l3f7.onrender.com",
+    origin: ["http://localhost:5173", "https://digitalbrain-l3f7.onrender.com"],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
 app.set("trust proxy", 1);
 app.listen(constant_1.port);
 app.get('/', (req, res) => {
-    res.send('Hello World');
+    res.send('Digital Brain AI Agent API is running!');
 });
+// app.post("/upload",async(req:any,res:any)=>{
+//  try{ const {userId,content}=req.body;
+//   let text="";
+//   const chunks=await chunkText(content);
+//   const embedChunks=await generateEmbeddings(chunks);
+//   const result = await storeChunks(userId,embedChunks);
+//   return res.send(result)
+// }catch(err){
+//   return res.send(err);
+// }
+// })
 app.use("/api/v1/content", content_route_1.default);
 app.use("/api/v1/brain", brain_route_1.default);
+// app.use("/api/v1/chat", chatRoutes);
 app.use("/api/v1", user_routes_1.default);
+console.log(`Server running on port ${constant_1.port}`);

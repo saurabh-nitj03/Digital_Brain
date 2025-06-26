@@ -93,50 +93,47 @@ export default function Dashboard() {
           open={openShareModal}
           onClose={() => setOpenShareModal(false)}
         />
-                
-                <div className=" flex justify-between items-center gap-4">
-                    <div className=" text-xl md:text-2xl lg:text-3xl font-semibold ml-5 text-gray-600 cursor-pointer" onClick={refresh} >
-                        All Notes
-                    </div>
-                    <div><SearchBar contents={contents} setContents={setContents}/></div>
-                    
-                    <div className="flex gap-3 justify-end">
-                        <Button 
-                            variant='secondary' 
-                            size='md' 
-                            text='Share Brain' 
-                            startIcon={<ShareIcon size='md' />} 
-                            onClick={()=>setOpenShareModal(true)} 
-                        />
-                        
-                        <Button 
-                            variant='primary' 
-                            size='md' 
-                            text='Add Content' 
-                            startIcon={<PlusIcon size='md' />} 
-                            onClick={() => { setModalOpen(true) }} 
-                        />
-                    </div>
+        <div className="flex justify-between">
+                <div className=" text-xl md:text-2xl lg:text-3xl font-semibold ml-5 text-gray-600 cursor-pointer" onClick={refresh} >
+                    All Notes
                 </div>
+                <div><SearchBar contents={contents} setContents={setContents}/></div>
+                <div className="flex gap-3 justify-end">
+                    <Button 
+                        variant='secondary' 
+                        size='md' 
+                        text='Share Brain' 
+                        startIcon={<ShareIcon size='md' />} 
+                        onClick={()=>setOpenShareModal(true)} 
+                    />
+                    
+                    <Button 
+                        variant='primary' 
+                        size='md' 
+                        text='Add Content' 
+                        startIcon={<PlusIcon size='md' />} 
+                        onClick={() => { setModalOpen(true) }} 
+                    />
+                </div>
+
+        </div>
                 
-                <div className="flex ml-5 mt-6">
-                    <div className="flex gap-6 flex-wrap justify-evenly items-start">
-                        {contents.map(({ type, title, link, _id, content, tags, createdAt }) => (
-                            <Card 
-                                key={_id} 
-                                type={type} 
-                                title={title} 
-                                link={link} 
-                                contentId={_id} 
-                                content={content} 
-                                tags={typeof tags === 'string' ? [tags] : tags} 
-                                createdAt={createdAt} 
-                                delete={true} 
-                                contents={contents}
-                                setContents={setContents}
-                            />
-                        ))}
-                    </div>
+                <div className="flex gap-6 flex-wrap justify-evenly items-start mt-6">
+                    {contents.map(({ type, title, link, _id, content, tags, createdAt }) => (
+                        <Card 
+                            key={_id} 
+                            type={type} 
+                            title={title} 
+                            link={link} 
+                            contentId={_id} 
+                            content={content} 
+                            tags={typeof tags === 'string' ? [tags] : tags} 
+                            createdAt={createdAt} 
+                            delete={true} 
+                            contents={contents}
+                            setContents={setContents}
+                        />
+                    ))}
                 </div>
             </div>
         </div>

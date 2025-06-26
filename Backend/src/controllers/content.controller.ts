@@ -7,6 +7,12 @@ import {
   TDeleteSchema,
 } from "../schema/content.schema";
 import { uploadCloudinary } from "../utils/cloudinary";
+import { ContentProcessor } from "../utils/contentProcessor";
+import { AIAgent } from "../utils/aiAgent";
+import fs from "fs";
+
+// Initialize AI Agent
+const aiAgent = new AIAgent();
 
 export const createContent=async (req: any, res: any) => {
     try {
@@ -47,6 +53,30 @@ export const createContent=async (req: any, res: any) => {
             }
         }
 
+        // Process content for AI agent BEFORE uploading to Cloudinary
+        let aiProcessingResult = null;
+        if (req.file) {
+            try {
+                // Process file for AI agent before uploading to Cloudinary
+                const fileBuffer = fs.readFileSync(req.file.path);
+                aiProcessingResult = await aiAgent.processAndStoreContent(
+                    req.userId,
+                    fileBuffer,
+                    req.file.mimetype
+                );
+
+                if (aiProcessingResult.success) {
+                    console.log("File processed for AI agent:", aiProcessingResult.message);
+                } else {
+                    console.warn("AI agent processing failed:", aiProcessingResult.message);
+                }
+            } catch (aiError) {
+                console.error("AI agent processing error:", aiError);
+                // Continue with content creation even if AI processing fails
+            }
+        }
+
+        // Now upload to Cloudinary (original flow)
         if (req.file) {
             const localFilePath = req.file.path;
             const uploadFile = await uploadCloudinary(localFilePath);
@@ -57,6 +87,42 @@ export const createContent=async (req: any, res: any) => {
                 });
             }
             link = uploadFile.url;
+        }
+
+        // Process other content types for AI agent
+        if (!req.file) {
+            try {
+                let contentToProcess: string | Buffer | undefined;
+                let contentType: string | undefined;
+
+                if (link && (type === "youtube" || type === "twitter" || type === "link")) {
+                    // For URLs, process the link
+                    contentToProcess = link;
+                } else if (content) {
+                    // For text content
+                    contentToProcess = content;
+                } else {
+                    // Skip processing if no processable content
+                    console.log("No processable content found for AI agent");
+                }
+
+                // Process and store embeddings if we have content to process
+                if (contentToProcess) {
+                    aiProcessingResult = await aiAgent.processAndStoreContent(
+                        req.userId,
+                        contentToProcess,
+                        contentType
+                    );
+
+                    if (aiProcessingResult.success) {
+                        console.log("Content processed for AI agent:", aiProcessingResult.message);
+                    } else {
+                        console.warn("AI agent processing failed:", aiProcessingResult.message);
+                    }
+                }
+            } catch (aiError) {
+                console.error("AI agent processing error:", aiError);
+            }
         }
 
         if ((type === "youtube" || type === "twitter" || type === "link") && !link) {
@@ -92,7 +158,11 @@ export const createContent=async (req: any, res: any) => {
         return res.status(201).json({
             success: true,
             message: "Content added successfully",
-            data: newContent
+            data: newContent,
+            aiProcessing: aiProcessingResult ? {
+                success: aiProcessingResult.success,
+                message: aiProcessingResult.message
+            } : null
         });
 
     } catch (err) {
@@ -237,3 +307,71 @@ export const contentType=async(req:any,res:any)=>{
        })
     }
 }
+
+export const queryContent = async(req: any, res: any) => {
+    try {
+        const { question } = req.body;
+        const userId = req.userId;
+
+        if (!question || typeof question !== "string") {
+            return res.status(400).json({
+                success: false,
+                message: "Question is required"
+            });
+        }
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "User not authenticated"
+            });
+        }
+
+        const response = await aiAgent.queryAgent(userId, question);
+
+        return res.status(200).json({
+            success: true,
+            answer: response.answer,
+            sources: response.sources,
+            confidence: response.confidence
+        });
+
+    } catch (error) {
+        console.error('Error in queryContent:', error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+}
+
+// export const getContentSummary = async(req: any, res: any) => {
+//     try {
+//         const userId = req.userId;
+
+//         if (!userId) {
+//             return res.status(401).json({
+//                 success: false,
+//                 message: "User not authenticated"
+//             });
+//         }
+
+//         const summary = await aiAgent.getUserContentSummary(userId);
+
+//         return res.status(200).json({
+//             success: true,
+//             summary
+//         });
+
+//     } catch (error) {
+//         console.error('Error in getContentSummary:', error);
+//         return res.status(500).json({
+//             success: false,
+//             message: "Internal server error"
+//         });
+//     }
+// }
+// {
+//    "userId":"6859764bb85d17bc5d8a847f",
+//    "question":"Who created this file ? What is the minor project"
+// }
