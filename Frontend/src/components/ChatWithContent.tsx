@@ -17,7 +17,6 @@ const ChatWithContent: React.FC = () => {
     setError('');
     setResponse('');
     try {
-      const token = getToken();
       const res = await axios.post(`${BACKEND_URL}/api/v1/content/query`, { question: query },
       {
         headers: {

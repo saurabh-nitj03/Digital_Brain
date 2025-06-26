@@ -7,7 +7,7 @@ import { useState } from "react";
 export default function Home() {
     const navigate = useNavigate();
     const [activeFeature, setActiveFeature] = useState(0);
-    const [isHovered, setIsHovered] = useState(false);
+    // const [isHovered, setIsHovered] = useState(false);
 
     const features = [
         { 
