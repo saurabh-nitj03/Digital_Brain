@@ -16,12 +16,6 @@ exports.upload = void 0;
 // const upload =multer({storage:storage})
 // export default upload
 const multer_1 = __importDefault(require("multer"));
-const storage = multer_1.default.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, '../../public/temp');
-    },
-    filename: function (req, file, cb) {
-        cb(null, `${Date.now()}-${file.originalname}`);
-    }
-});
-exports.upload = (0, multer_1.default)({ storage });
+// New: Use memory storage for production/cloud compatibility
+const memoryStorage = multer_1.default.memoryStorage();
+exports.upload = (0, multer_1.default)({ storage: memoryStorage });

@@ -18,7 +18,6 @@ const tags_1 = require("../model/tags");
 const content_schema_1 = require("../schema/content.schema");
 const cloudinary_1 = require("../utils/cloudinary");
 const aiAgent_1 = require("../utils/aiAgent");
-const fs_1 = __importDefault(require("fs"));
 // Initialize AI Agent
 const aiAgent = new aiAgent_1.AIAgent();
 const createContent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -59,9 +58,15 @@ const createContent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         let aiProcessingResult = null;
         if (req.file) {
             try {
-                // Process file for AI agent before uploading to Cloudinary
-                const fileBuffer = fs_1.default.readFileSync(req.file.path);
-                aiProcessingResult = yield aiAgent.processAndStoreContent(req.userId, fileBuffer, req.file.mimetype);
+                // --- Legacy: Disk-based file processing (commented out) ---
+                // const fileBuffer = fs.readFileSync(req.file.path);
+                // aiProcessingResult = await aiAgent.processAndStoreContent(
+                //     req.userId,
+                //     fileBuffer,
+                //     req.file.mimetype
+                // );
+                // --- New: Buffer-based file processing (memory storage) ---
+                aiProcessingResult = yield aiAgent.processAndStoreContent(req.userId, req.file.buffer, req.file.mimetype);
                 if (aiProcessingResult.success) {
                     console.log("File processed for AI agent:", aiProcessingResult.message);
                 }
@@ -74,17 +79,36 @@ const createContent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 // Continue with content creation even if AI processing fails
             }
         }
-        // Now upload to Cloudinary (original flow)
+        // Now upload to Cloudinary
         if (req.file) {
-            const localFilePath = req.file.path;
-            const uploadFile = yield (0, cloudinary_1.uploadCloudinary)(localFilePath);
-            if (!uploadFile) {
+            try {
+                // --- Legacy: Disk-based Cloudinary upload (commented out) ---
+                // const localFilePath = req.file.path;
+                // const uploadFile = await uploadCloudinary(localFilePath);
+                // if (!uploadFile) {
+                //     return res.status(400).json({
+                //         success: false,
+                //         message: "File upload failed"
+                //     });
+                // }
+                // link = uploadFile.url;
+                // --- New: Buffer-based Cloudinary upload ---
+                const uploadFile = yield (0, cloudinary_1.uploadBufferToCloudinary)(req.file.buffer, req.file.originalname, req.file.mimetype);
+                if (!uploadFile) {
+                    return res.status(400).json({
+                        success: false,
+                        message: "File upload failed"
+                    });
+                }
+                link = uploadFile.secure_url || uploadFile.url;
+            }
+            catch (cloudErr) {
                 return res.status(400).json({
                     success: false,
-                    message: "File upload failed"
+                    message: "File upload failed",
+                    error: (cloudErr === null || cloudErr === void 0 ? void 0 : cloudErr.message) || String(cloudErr)
                 });
             }
-            link = uploadFile.url;
         }
         // Process other content types for AI agent
         if (!req.file) {

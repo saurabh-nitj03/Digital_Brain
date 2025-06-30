@@ -10,21 +10,32 @@ cloudinary.config({
     api_secret:process.env.CLOUDINARY_API_SECRET, 
 })
 
-const uploadCloudinary= async(localFilePath:any) => {
-    try{
-        if(!localFilePath) return null
-        // upload file on cloudinary
+// Original: Upload from local file path (not used in production/cloud)
+// const uploadCloudinary= async(localFilePath:any) => {
+//     try{
+//         if(!localFilePath) return null
+//         // upload file on cloudinary
+//         const res= await cloudinary.uploader.upload(localFilePath,{
+//             resource_type:"auto",
+//         });
+//         return res;
+//     } catch(err){
+//         return null;
+//     }
+// }
 
-        const res= await cloudinary.uploader.upload(localFilePath,{
-            resource_type:"auto",
-        });
-        // console.log("File  uploaded successfully",res.url)
-        fs.unlinkSync(localFilePath);
-        return res;
-    } catch(err){
-        fs.unlinkSync(localFilePath) // resmove locally ssaved temp file as upload operation got failed
-        return null;
-    }
-}
+// New: Upload from buffer (memory storage)
+const uploadBufferToCloudinary = async (buffer: Buffer, filename: string, mimetype: string) => {
+    return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+            { resource_type: 'auto', public_id: filename },
+            (error, result) => {
+                if (error) return reject(error);
+                resolve(result);
+            }
+        );
+        stream.end(buffer);
+    });
+};
 
- export {uploadCloudinary}
+export { /*uploadCloudinary,*/ uploadBufferToCloudinary }
