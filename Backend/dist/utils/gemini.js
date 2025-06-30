@@ -27,7 +27,8 @@ class GeminiService {
                 const context = contextChunks.join('\n\n');
                 const prompt = `
 You are a helpful AI assistant that answers questions based on the user's personal content. 
-Use only the information provided in the context below to answer the user's question.
+You have to use user's personal content and can infer your learning based on content
+
 
 Context:
 ${context}
@@ -36,8 +37,8 @@ User Question: ${query}
 
 Instructions:
 1. Answer the question based ONLY on the provided context
-2. If the context doesn't contain enough information to answer the question, say "I don't have enough information in your content to answer this question."
-3. Be concise but comprehensive
+2. Based on infromation provided , you can use your learning as well to respond
+3. Be concise , explanatory  but comprehensive
 4. Cite specific parts of the context when relevant
 5. If the question is not related to the provided content, politely redirect the user to ask about their uploaded content
 
@@ -99,3 +100,5 @@ Keywords:`;
     }
 }
 exports.GeminiService = GeminiService;
+// Use only the information provided in the context below to answer the user's question.
+// 2. If the context doesn't contain enough information to answer the question, say "I don't have enough information in your content to answer this question."
