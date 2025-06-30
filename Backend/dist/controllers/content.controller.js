@@ -20,6 +20,8 @@ const cloudinary_1 = require("../utils/cloudinary");
 const aiAgent_1 = require("../utils/aiAgent");
 // Initialize AI Agent
 const aiAgent = new aiAgent_1.AIAgent();
+// At the top of your file, call cloudinaryConnect once (if not already called in your app entry)
+(0, cloudinary_1.cloudinaryConnect)();
 const createContent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let processedBody = Object.assign({}, req.body);
@@ -93,7 +95,8 @@ const createContent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 // }
                 // link = uploadFile.url;
                 // --- New: Buffer-based Cloudinary upload ---
-                const uploadFile = yield (0, cloudinary_1.uploadBufferToCloudinary)(req.file.buffer, req.file.originalname, req.file.mimetype);
+                const uploadFile = yield (0, cloudinary_1.uploadBufferToCloudinary)(req.file.buffer, req.file.originalname, req.file.mimetype, "your_folder_name" // optional: set a folder in Cloudinary
+                );
                 if (!uploadFile) {
                     return res.status(400).json({
                         success: false,

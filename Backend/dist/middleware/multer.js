@@ -17,5 +17,5 @@ exports.upload = void 0;
 // export default upload
 const multer_1 = __importDefault(require("multer"));
 // New: Use memory storage for production/cloud compatibility
-const memoryStorage = multer_1.default.memoryStorage();
-exports.upload = (0, multer_1.default)({ storage: memoryStorage });
+const storage = multer_1.default.memoryStorage();
+exports.upload = (0, multer_1.default)({ storage });

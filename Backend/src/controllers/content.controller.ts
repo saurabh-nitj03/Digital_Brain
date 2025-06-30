@@ -6,12 +6,15 @@ import {
   TContentSchema,
   TDeleteSchema,
 } from "../schema/content.schema";
-import { uploadBufferToCloudinary } from "../utils/cloudinary";
+import { uploadBufferToCloudinary, cloudinaryConnect } from "../utils/cloudinary";
 import { ContentProcessor } from "../utils/contentProcessor";
 import { AIAgent } from "../utils/aiAgent";
 
 // Initialize AI Agent
 const aiAgent = new AIAgent();
+
+// At the top of your file, call cloudinaryConnect once (if not already called in your app entry)
+cloudinaryConnect();
 
 export const createContent=async (req: any, res: any) => {
     try {
@@ -97,7 +100,12 @@ export const createContent=async (req: any, res: any) => {
                 // link = uploadFile.url;
 
                 // --- New: Buffer-based Cloudinary upload ---
-                const uploadFile: any = await uploadBufferToCloudinary(req.file.buffer, req.file.originalname, req.file.mimetype);
+                const uploadFile: any = await uploadBufferToCloudinary(
+                    req.file.buffer,
+                    req.file.originalname,
+                    req.file.mimetype,
+                    "your_folder_name" // optional: set a folder in Cloudinary
+                );
                 if (!uploadFile) {
                     return res.status(400).json({
                         success: false,

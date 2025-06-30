@@ -15,5 +15,5 @@
 import multer from 'multer';
 
 // New: Use memory storage for production/cloud compatibility
-const memoryStorage = multer.memoryStorage();
-export const upload = multer({ storage: memoryStorage });
+const storage = multer.memoryStorage();
+export const upload = multer({ storage });
