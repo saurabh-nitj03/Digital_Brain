@@ -1,7 +1,7 @@
 import { contentSearch, contentType, createContent, deleteContent, getContent, queryContent,  } from "../controllers/content.controller";
 import { userMiddleware } from "../middleware/middleware";
 import { Router } from "express";
-import {upload} from "../middleware/multer";
+import upload from "../middleware/multer";
 
 const router=Router();
 

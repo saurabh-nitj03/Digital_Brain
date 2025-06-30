@@ -45,17 +45,27 @@ export const cloudinaryConnect = () => {
 };
 
 // New: Upload buffer (from multer memory storage) to Cloudinary
-export const uploadBufferToCloudinary = async (buffer: Buffer, filename: string, mimetype: string, folder?: string, quality?: string) => {
-    return new Promise((resolve, reject) => {
-        const options: any = { resource_type: 'auto' };
-        if (folder) options.folder = folder;
-        if (quality) options.quality = quality;
-        if (filename) options.public_id = filename;
+// export const uploadBufferToCloudinary = async (buffer: Buffer, filename: string, mimetype: string, folder?: string, quality?: string) => {
+//     return new Promise((resolve, reject) => {
+//         const options: any = { resource_type: 'auto' };
+//         if (folder) options.folder = folder;
+//         if (quality) options.quality = quality;
+//         if (filename) options.public_id = filename;
 
-        const stream = cloudinary.uploader.upload_stream(options, (error, result) => {
-            if (error) return reject(error);
-            resolve(result);
-        });
-        stream.end(buffer);
-    });
-};
+//         const stream = cloudinary.uploader.upload_stream(options, (error, result) => {
+//             if (error) return reject(error);
+//             resolve(result);
+//         });
+//         stream.end(buffer);
+//     });
+// };
+
+
+// async function uploadFileToCloudinary(file, folder, quality) {
+//     const options = { folder }
+//     options.resource_type = "image";
+//     if (quality) {
+//         options.quality = quality;
+//     }
+//     return await cloudinary.uploader.upload(file.path, options);
+// };

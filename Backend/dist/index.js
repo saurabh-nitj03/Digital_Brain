@@ -13,6 +13,7 @@ const brain_route_1 = __importDefault(require("./routes/brain.route"));
 // import chatRoutes from "./routes/chat.routes"
 const constant_1 = require("./utils/constant");
 const dotenv_1 = __importDefault(require("dotenv"));
+const cloudinary_1 = require("./utils/cloudinary");
 dotenv_1.default.config();
 (0, connect_1.default)();
 const app = (0, express_1.default)();
@@ -24,6 +25,7 @@ app.use((0, cors_1.default)({
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
+(0, cloudinary_1.cloudinaryConnect)();
 app.set("trust proxy", 1);
 app.listen(constant_1.port);
 app.get('/', (req, res) => {

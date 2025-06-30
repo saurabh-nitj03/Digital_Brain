@@ -16,6 +16,7 @@ import brainRoutes from "./routes/brain.route"
 // import chatRoutes from "./routes/chat.routes"
 import { port } from "./utils/constant";
 import dotenv from "dotenv"
+import { cloudinaryConnect } from "./utils/cloudinary";
 dotenv.config()
 
 connectToDB();
@@ -35,6 +36,7 @@ app.use(
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
   })
 );
+cloudinaryConnect();
 app.set("trust proxy", 1);
 
 app.listen(port)

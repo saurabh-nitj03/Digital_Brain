@@ -16,12 +16,20 @@ exports.queryContent = exports.contentType = exports.contentSearch = exports.del
 const content_1 = __importDefault(require("../model/content"));
 const tags_1 = require("../model/tags");
 const content_schema_1 = require("../schema/content.schema");
-const cloudinary_1 = require("../utils/cloudinary");
 const aiAgent_1 = require("../utils/aiAgent");
+const cloudinary_1 = require("cloudinary");
 // Initialize AI Agent
 const aiAgent = new aiAgent_1.AIAgent();
 // At the top of your file, call cloudinaryConnect once (if not already called in your app entry)
-(0, cloudinary_1.cloudinaryConnect)();
+// cloudinaryConnect();
+function uploadFileToCloudinary(file, folder) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const options = { folder };
+        options.resource_type = "image";
+        return yield cloudinary_1.v2.uploader.upload(file.path, options);
+    });
+}
+;
 const createContent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let processedBody = Object.assign({}, req.body);
@@ -95,8 +103,12 @@ const createContent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 // }
                 // link = uploadFile.url;
                 // --- New: Buffer-based Cloudinary upload ---
-                const uploadFile = yield (0, cloudinary_1.uploadBufferToCloudinary)(req.file.buffer, req.file.originalname, req.file.mimetype, "your_folder_name" // optional: set a folder in Cloudinary
-                );
+                // const uploadFile: any = await uploadBufferToCloudinary(
+                //     req.file.buffer,
+                //     req.file.originalname,
+                //     req.file.mimetype, // optional: set a folder in Cloudinary
+                // );
+                const uploadFile = yield uploadFileToCloudinary(req.file, "DigialBrain");
                 if (!uploadFile) {
                     return res.status(400).json({
                         success: false,
