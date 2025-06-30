@@ -18,6 +18,7 @@ const gemini_1 = require("./gemini");
 const embed_1 = require("./embed");
 const pinecone_1 = require("./pinecone");
 const chunkText_1 = __importDefault(require("./chunkText"));
+const fs_1 = __importDefault(require("fs"));
 class AIAgent {
     constructor() {
         this.geminiService = new gemini_1.GeminiService();
@@ -25,10 +26,30 @@ class AIAgent {
     processAndStoreContent(userId, content, contentType) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                // console.log(, userId);
-                // Step 1: Process the content based on its type
-                const processedContent = yield contentProcessor_1.ContentProcessor.processContent(content, contentType);
-                // console.log('Content processed :', processedContent.type)
+                // --- Legacy: Only supported buffer or string (commented out) ---
+                // const processedContent = await ContentProcessor.processContent(content, contentType);
+                // const chunks = await chunkText(processedContent.text);
+                // const embedChunks = await embedSentences(chunks);
+                // const chunksWithMetadata = embedChunks.map(chunk => ({
+                //   ...chunk,
+                //   source: processedContent.source,
+                //   contentType: processedContent.type,
+                //   metadata: {
+                //     originalSource: processedContent.source,
+                //     contentType: processedContent.type
+                //   }
+                // }));
+                // await storeChunks(userId, chunksWithMetadata);
+                // --- New: Support for multer disk storage (file.path) ---
+                let processedContent;
+                if (typeof content === 'string' && contentType && fs_1.default.existsSync(content)) {
+                    // If content is a file path, read as buffer
+                    const fileBuffer = fs_1.default.readFileSync(content);
+                    processedContent = yield contentProcessor_1.ContentProcessor.processContent(fileBuffer, contentType);
+                }
+                else {
+                    processedContent = yield contentProcessor_1.ContentProcessor.processContent(content, contentType);
+                }
                 const chunks = yield (0, chunkText_1.default)(processedContent.text);
                 const embedChunks = yield (0, embed_1.embedSentences)(chunks);
                 const chunksWithMetadata = embedChunks.map(chunk => (Object.assign(Object.assign({}, chunk), { source: processedContent.source, contentType: processedContent.type, metadata: {

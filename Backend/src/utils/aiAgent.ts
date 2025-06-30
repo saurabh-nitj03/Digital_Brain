@@ -3,6 +3,7 @@ import { GeminiService } from './gemini';
 import { embedSentences, embedQuery } from './embed';
 import { storeChunks, searchChunks, getUserChunks, deleteUserChunks } from './pinecone';
 import chunkText from './chunkText';
+import fs from 'fs';
 
 export interface QueryResponse {
   answer: string;
@@ -28,13 +29,31 @@ export class AIAgent {
     keywords?: string[];
   }> {
     try {
-      // console.log(, userId);
-      
-      // Step 1: Process the content based on its type
-      const processedContent = await ContentProcessor.processContent(content, contentType);
-      // console.log('Content processed :', processedContent.type)
+      // --- Legacy: Only supported buffer or string (commented out) ---
+      // const processedContent = await ContentProcessor.processContent(content, contentType);
+      // const chunks = await chunkText(processedContent.text);
+      // const embedChunks = await embedSentences(chunks);
+      // const chunksWithMetadata = embedChunks.map(chunk => ({
+      //   ...chunk,
+      //   source: processedContent.source,
+      //   contentType: processedContent.type,
+      //   metadata: {
+      //     originalSource: processedContent.source,
+      //     contentType: processedContent.type
+      //   }
+      // }));
+      // await storeChunks(userId, chunksWithMetadata);
 
-     
+      // --- New: Support for multer disk storage (file.path) ---
+      let processedContent: ProcessedContent;
+      if (typeof content === 'string' && contentType && fs.existsSync(content)) {
+        // If content is a file path, read as buffer
+        const fileBuffer = fs.readFileSync(content);
+        processedContent = await ContentProcessor.processContent(fileBuffer, contentType);
+      } else {
+        processedContent = await ContentProcessor.processContent(content, contentType);
+      }
+
       const chunks = await chunkText(processedContent.text);
       const embedChunks = await embedSentences(chunks);
       const chunksWithMetadata = embedChunks.map(chunk => ({

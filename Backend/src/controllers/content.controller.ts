@@ -10,6 +10,7 @@ import {  cloudinaryConnect } from "../utils/cloudinary";
 import { ContentProcessor } from "../utils/contentProcessor";
 import { AIAgent } from "../utils/aiAgent";
 import { v2 as cloudinary } from "cloudinary";
+import fs from 'fs';
 
 // Initialize AI Agent
 const aiAgent = new AIAgent();
@@ -65,18 +66,22 @@ export const createContent=async (req: any, res: any) => {
         let aiProcessingResult = null;
         if (req.file) {
             try {
-                // --- Legacy: Disk-based file processing (commented out) ---
-                // const fileBuffer = fs.readFileSync(req.file.path);
-                // aiProcessingResult = await aiAgent.processAndStoreContent(
-                //     req.userId,
-                //     fileBuffer,
-                //     req.file.mimetype
-                // );
-
-                // --- New: Buffer-based file processing (memory storage) ---
+                // --- Always use a buffer for AI processing ---
+                let fileBuffer;
+                if (req.file.buffer) {
+                    fileBuffer = req.file.buffer;
+                } else if (req.file.path) {
+                    fileBuffer = fs.readFileSync(req.file.path);
+                }
+                console.log('AI Processing file:', {
+                  mimetype: req.file.mimetype,
+                  hasBuffer: !!fileBuffer,
+                  bufferType: typeof fileBuffer,
+                  bufferIsBuffer: Buffer.isBuffer(fileBuffer)
+                });
                 aiProcessingResult = await aiAgent.processAndStoreContent(
                     req.userId,
-                    req.file.buffer,
+                    fileBuffer,
                     req.file.mimetype
                 );
 

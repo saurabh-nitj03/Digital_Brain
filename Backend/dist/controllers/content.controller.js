@@ -18,6 +18,7 @@ const tags_1 = require("../model/tags");
 const content_schema_1 = require("../schema/content.schema");
 const aiAgent_1 = require("../utils/aiAgent");
 const cloudinary_1 = require("cloudinary");
+const fs_1 = __importDefault(require("fs"));
 // Initialize AI Agent
 const aiAgent = new aiAgent_1.AIAgent();
 // At the top of your file, call cloudinaryConnect once (if not already called in your app entry)
@@ -68,15 +69,21 @@ const createContent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         let aiProcessingResult = null;
         if (req.file) {
             try {
-                // --- Legacy: Disk-based file processing (commented out) ---
-                // const fileBuffer = fs.readFileSync(req.file.path);
-                // aiProcessingResult = await aiAgent.processAndStoreContent(
-                //     req.userId,
-                //     fileBuffer,
-                //     req.file.mimetype
-                // );
-                // --- New: Buffer-based file processing (memory storage) ---
-                aiProcessingResult = yield aiAgent.processAndStoreContent(req.userId, req.file.buffer, req.file.mimetype);
+                // --- Always use a buffer for AI processing ---
+                let fileBuffer;
+                if (req.file.buffer) {
+                    fileBuffer = req.file.buffer;
+                }
+                else if (req.file.path) {
+                    fileBuffer = fs_1.default.readFileSync(req.file.path);
+                }
+                console.log('AI Processing file:', {
+                    mimetype: req.file.mimetype,
+                    hasBuffer: !!fileBuffer,
+                    bufferType: typeof fileBuffer,
+                    bufferIsBuffer: Buffer.isBuffer(fileBuffer)
+                });
+                aiProcessingResult = yield aiAgent.processAndStoreContent(req.userId, fileBuffer, req.file.mimetype);
                 if (aiProcessingResult.success) {
                     console.log("File processed for AI agent:", aiProcessingResult.message);
                 }
